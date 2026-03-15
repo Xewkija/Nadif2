@@ -45,6 +45,21 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Warm Earth Tones */
+  --color-amber-50: var(--amber-50);
+  --color-amber-100: var(--amber-100);
+  --color-amber-200: var(--amber-200);
+  --color-amber-300: var(--amber-300);
+  --color-amber-400: var(--amber-400);
+  --color-amber-500: var(--amber-500);
+  --color-amber-600: var(--amber-600);
+  --color-amber-700: var(--amber-700);
+  --color-warm-50: var(--warm-50);
+  --color-warm-100: var(--warm-100);
+  --color-warm-200: var(--warm-200);
+  --color-warm-800: var(--warm-800);
+  --color-green-600: var(--green-600);
 }
 
 :root {
@@ -80,6 +95,21 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Warm Earth Tones */
+  --amber-50: oklch(0.987 0.022 85);
+  --amber-100: oklch(0.962 0.044 85);
+  --amber-200: oklch(0.924 0.060 84);
+  --amber-300: oklch(0.879 0.100 80);
+  --amber-400: oklch(0.820 0.130 75);
+  --amber-500: oklch(0.769 0.160 70);
+  --amber-600: oklch(0.666 0.179 58);
+  --amber-700: oklch(0.555 0.163 48);
+  --warm-50: oklch(0.988 0.008 70);
+  --warm-100: oklch(0.970 0.012 65);
+  --warm-200: oklch(0.945 0.018 60);
+  --warm-800: oklch(0.350 0.030 50);
+  --green-600: oklch(0.627 0.194 149);
 }
 
 .dark {
@@ -114,6 +144,21 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Warm Earth Tones - adjusted for dark mode */
+  --amber-50: oklch(0.250 0.030 70);
+  --amber-100: oklch(0.300 0.040 70);
+  --amber-200: oklch(0.350 0.050 70);
+  --amber-300: oklch(0.400 0.070 70);
+  --amber-400: oklch(0.500 0.100 70);
+  --amber-500: oklch(0.650 0.140 70);
+  --amber-600: oklch(0.750 0.160 65);
+  --amber-700: oklch(0.850 0.140 60);
+  --warm-50: oklch(0.220 0.010 60);
+  --warm-100: oklch(0.280 0.015 55);
+  --warm-200: oklch(0.340 0.020 50);
+  --warm-800: oklch(0.900 0.020 55);
+  --green-600: oklch(0.627 0.194 149);
 }
 
 @layer base {
