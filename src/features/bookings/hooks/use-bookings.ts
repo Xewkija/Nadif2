@@ -15,6 +15,9 @@ import type {
 
 // Extended booking type with relations for list/detail views
 export type BookingListItem = Booking & {
+  // Payment fields (may not be in generated types yet)
+  amount_paid_cents?: number | null
+  payment_status?: string | null
   customer?: {
     id: string
     first_name: string

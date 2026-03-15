@@ -17,6 +17,7 @@ import {
   useDeletePaymentGatePolicy,
   type PaymentGatePolicy,
 } from '@/features/payments/hooks'
+import { StripeConnectSection } from '@/features/payments/components'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { PageHeader } from '@/components/ui/page-header'
@@ -197,6 +198,11 @@ export default function PaymentSettingsPage() {
         }
       />
 
+      {/* Stripe Connect */}
+      <div className="mb-8">
+        <StripeConnectSection />
+      </div>
+
       {/* Overview Cards */}
       <div className="grid sm:grid-cols-3 gap-4 mb-8">
         <Card>
@@ -285,13 +291,7 @@ export default function PaymentSettingsPage() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      variant="secondary"
-                      className={policy.is_active
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
-                      }
-                    >
+                    <Badge variant={policy.is_active ? 'success' : 'secondary'}>
                       {policy.is_active ? 'Active' : 'Inactive'}
                     </Badge>
                   </TableCell>

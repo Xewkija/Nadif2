@@ -38,8 +38,9 @@ import {
   useReopenAsDraft,
 } from '@/features/bookings/hooks'
 import { useCreateReviewRequest } from '@/features/reviews/hooks'
+import { BookingPaymentSection } from '@/features/payments/components'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { StatusBadge } from '@/components/ui/status-badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
@@ -55,33 +56,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import type { BookingStatus } from '@/types/database'
 
-const statusLabels: Record<BookingStatus, string> = {
-  draft: 'Draft',
-  quote_pending: 'Quote Sent',
-  quote_accepted: 'Quote Accepted',
-  quote_expired: 'Quote Expired',
-  quote_declined: 'Quote Declined',
-  confirmed: 'Confirmed',
-  scheduled: 'Scheduled',
-  in_progress: 'In Progress',
-  completed: 'Completed',
-  cancelled: 'Cancelled',
-  skipped: 'Skipped',
-}
-
-const statusColors: Record<BookingStatus, string> = {
-  draft: 'bg-gray-100 text-gray-800',
-  quote_pending: 'bg-yellow-100 text-yellow-800',
-  quote_accepted: 'bg-blue-100 text-blue-800',
-  quote_expired: 'bg-orange-100 text-orange-800',
-  quote_declined: 'bg-red-100 text-red-800',
-  confirmed: 'bg-green-100 text-green-800',
-  scheduled: 'bg-purple-100 text-purple-800',
-  in_progress: 'bg-indigo-100 text-indigo-800',
-  completed: 'bg-emerald-100 text-emerald-800',
-  cancelled: 'bg-red-100 text-red-800',
-  skipped: 'bg-slate-100 text-slate-600',
-}
 
 function formatPrice(cents: number | null | undefined): string {
   if (!cents) return '$0'
@@ -249,9 +223,7 @@ export default function BookingDetailPage() {
               <h1 className="text-2xl font-semibold">
                 Booking for {booking.customer?.first_name} {booking.customer?.last_name}
               </h1>
-              <Badge variant="secondary" className={statusColors[booking.status]}>
-                {statusLabels[booking.status]}
-              </Badge>
+              <StatusBadge status={booking.status} />
             </div>
             <p className="text-muted-foreground mt-1">
               {booking.service?.name}
@@ -484,17 +456,17 @@ export default function BookingDetailPage() {
 
           {/* Cancellation Info */}
           {booking.status === 'cancelled' && booking.cancellation_reason && (
-            <Card className="border-red-200 bg-red-50">
+            <Card className="border-destructive/20 bg-destructive-muted">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-red-800">
+                <CardTitle className="flex items-center gap-2 text-destructive">
                   <AlertCircle className="h-5 w-5" />
                   Cancellation
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-red-700">{booking.cancellation_reason}</p>
+                <p className="text-sm text-destructive">{booking.cancellation_reason}</p>
                 {booking.cancelled_at && (
-                  <p className="text-xs text-red-600 mt-2">
+                  <p className="text-xs text-destructive/80 mt-2">
                     Cancelled on {format(new Date(booking.cancelled_at), 'MMM d, yyyy h:mm a')}
                   </p>
                 )}
@@ -575,6 +547,17 @@ export default function BookingDetailPage() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Payment */}
+          {booking.customer && (
+            <BookingPaymentSection
+              bookingId={bookingId}
+              customerId={booking.customer.id}
+              totalPriceCents={booking.total_price_cents || 0}
+              amountPaidCents={booking.amount_paid_cents || 0}
+              paymentStatus={booking.payment_status || 'unpaid'}
+            />
+          )}
 
           {/* Timeline */}
           <Card>

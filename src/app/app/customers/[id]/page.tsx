@@ -15,8 +15,10 @@ import {
   Trash2,
   Star,
   Calendar,
+  CreditCard,
 } from 'lucide-react'
 import { useCustomer, useDeleteProperty, useSetPrimaryProperty } from '@/features/customers/hooks'
+import { PaymentMethodsList, CardCollectionSheet } from '@/features/payments/components'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -32,22 +34,13 @@ import { CustomerSheet } from '../components/customer-sheet'
 import { PropertySheet } from './components/property-sheet'
 import type { CustomerType, Property } from '@/types/database'
 
-const customerTypeLabels: Record<CustomerType, string> = {
-  lead: 'Lead',
-  customer: 'Customer',
-  repeat: 'Repeat',
-  vip: 'VIP',
-  inactive: 'Inactive',
-  do_not_service: 'Do Not Service',
-}
-
-const customerTypeColors: Record<CustomerType, string> = {
-  lead: 'bg-yellow-100 text-yellow-800',
-  customer: 'bg-blue-100 text-blue-800',
-  repeat: 'bg-green-100 text-green-800',
-  vip: 'bg-purple-100 text-purple-800',
-  inactive: 'bg-gray-100 text-gray-600',
-  do_not_service: 'bg-red-100 text-red-800',
+const customerTypeConfig: Record<CustomerType, { label: string; variant: 'default' | 'success' | 'warning' | 'destructive' | 'secondary' }> = {
+  lead: { label: 'Lead', variant: 'warning' },
+  customer: { label: 'Customer', variant: 'default' },
+  repeat: { label: 'Repeat', variant: 'success' },
+  vip: { label: 'VIP', variant: 'success' },
+  inactive: { label: 'Inactive', variant: 'secondary' },
+  do_not_service: { label: 'Do Not Service', variant: 'destructive' },
 }
 
 const propertyTypeLabels: Record<string, string> = {
@@ -73,6 +66,7 @@ export default function CustomerDetailPage() {
   const [editCustomerOpen, setEditCustomerOpen] = useState(false)
   const [propertySheetOpen, setPropertySheetOpen] = useState(false)
   const [editingPropertyId, setEditingPropertyId] = useState<string | null>(null)
+  const [cardSheetOpen, setCardSheetOpen] = useState(false)
 
   const handleEditProperty = (propertyId: string) => {
     setEditingPropertyId(propertyId)
@@ -146,11 +140,8 @@ export default function CustomerDetailPage() {
               <h1 className="text-2xl font-semibold">
                 {customer.first_name} {customer.last_name}
               </h1>
-              <Badge
-                variant="secondary"
-                className={customerTypeColors[customer.customer_type]}
-              >
-                {customerTypeLabels[customer.customer_type]}
+              <Badge variant={customerTypeConfig[customer.customer_type].variant}>
+                {customerTypeConfig[customer.customer_type].label}
               </Badge>
             </div>
             {customer.notes && (
@@ -199,7 +190,7 @@ export default function CustomerDetailPage() {
                           <div className="flex items-center gap-2">
                             <p className="font-medium">{property.address_line1}</p>
                             {property.is_primary && (
-                              <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                              <Badge variant="warning">
                                 <Star className="mr-1 h-3 w-3" />
                                 Primary
                               </Badge>
@@ -293,6 +284,23 @@ export default function CustomerDetailPage() {
 
         {/* Sidebar */}
         <div className="space-y-6">
+          {/* Payment Methods */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <CreditCard className="h-4 w-4" />
+                Payment Methods
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PaymentMethodsList
+                customerId={customerId}
+                onAddCard={() => setCardSheetOpen(true)}
+                compact
+              />
+            </CardContent>
+          </Card>
+
           {/* Contact Info */}
           <Card>
             <CardHeader>
@@ -381,6 +389,12 @@ export default function CustomerDetailPage() {
         }}
         customerId={customerId}
         propertyId={editingPropertyId}
+      />
+
+      <CardCollectionSheet
+        open={cardSheetOpen}
+        onOpenChange={setCardSheetOpen}
+        customerId={customerId}
       />
     </div>
   )
