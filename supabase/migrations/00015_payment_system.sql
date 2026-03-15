@@ -447,11 +447,14 @@ BEGIN
   IF v_method.is_default THEN
     UPDATE customer_payment_methods
     SET is_default = TRUE
-    WHERE customer_id = v_method.customer_id
-    AND is_active = TRUE
-    AND id != p_payment_method_id
-    ORDER BY created_at DESC
-    LIMIT 1;
+    WHERE id = (
+      SELECT id FROM customer_payment_methods
+      WHERE customer_id = v_method.customer_id
+      AND is_active = TRUE
+      AND id != p_payment_method_id
+      ORDER BY created_at DESC
+      LIMIT 1
+    );
   END IF;
 
   RETURN jsonb_build_object(
